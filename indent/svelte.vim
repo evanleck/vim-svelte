@@ -27,7 +27,7 @@ let b:svelte_subtype_indentexpr = &l:indentexpr
 let b:did_indent = 1
 
 setlocal indentexpr=GetSvelteIndent()
-setlocal indentkeys=o,O,*<Return>,<>>,{,},0),0],!^F
+setlocal indentkeys=o,O,*<Return>,<>>,{,},0),0],!^F,=:else,=:then,=:catch,=/if,=/each,=/await
 
 " Only define the function once.
 if exists('*GetSvelteIndent')
@@ -49,10 +49,17 @@ function! GetSvelteIndent()
 
   exe "let indent = ".b:svelte_subtype_indentexpr
 
+  " Previous line like "#if" or "#each"
   if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
     let indent = indent + sw
   endif
 
+  " Previous line like ":else" or ":then"
+  if previous_line =~ '^\s*{\s*:\(else\|catch\|then\)'
+    let indent = indent + sw
+  endif
+
+  " Current line like ":else" or ":then"
   if current_line =~ '^\s*{\s*:\(else\|catch\|then\)'
     let indent = indent - sw
   endif
