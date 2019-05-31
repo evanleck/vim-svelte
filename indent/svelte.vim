@@ -8,22 +8,29 @@ if exists("b:did_indent")
   finish
 endif
 
-runtime! indent/html.vim
-unlet! b:did_indent
+" All of the sub-language indentation logic is taken from
+" https://github.com/posva/vim-vue, which seems to have handled this really
+" nicely.
+function! s:get_indentexpr(language)
+  unlet! b:did_indent
+  execute 'runtime! indent/' . a:language . '.vim'
+  return &indentexpr
+endfunction
 
-" Force HTML indent to not keep state.
-let b:html_indent_usestate = 0
+" HTML is left out, it will be used when there is no match.
+let s:languages = [
+      \   { 'name': 'css', 'pairs': ['<style', '</style>'] },
+      \   { 'name': 'javascript', 'pairs': ['<script', '</script>'] },
+      \ ]
 
-" Inspired by/lifted from eruby.vim.
-if &l:indentexpr == ''
-  if &l:cindent
-    let &l:indentexpr = 'cindent(v:lnum)'
-  else
-    let &l:indentexpr = 'indent(prevnonblank(v:lnum-1))'
+for s:language in s:languages
+  " Set 'indentexpr' if the user has an indent file installed for the language
+  if strlen(globpath(&rtp, 'indent/'. s:language.name .'.vim'))
+    let s:language.indentexpr = s:get_indentexpr(s:language.name)
   endif
-endif
-let b:svelte_subtype_indentexpr = &l:indentexpr
+endfor
 
+let s:html_indent = s:get_indentexpr('html')
 let b:did_indent = 1
 
 setlocal indentexpr=GetSvelteIndent()
@@ -35,37 +42,55 @@ if exists('*GetSvelteIndent')
 endif
 
 function! GetSvelteIndent()
-  let line_number = v:lnum
+  for language in s:languages
+    let opening_tag_line = searchpair(language.pairs[0], '', language.pairs[1], 'bWr')
 
-  if line_number == 0
-    return 0
-  endif
+    if opening_tag_line
+      execute 'let indent = ' . get(language, 'indentexpr', -1)
+      break
+    endif
+  endfor
 
-  let sw = shiftwidth()
+  " Only evaluate if we didn't match a <script> or <style> block above.
+  if !exists('l:indent')
+    let line_number = v:lnum
 
-  let current_line = getline(line_number)
-  let previous_line_number = prevnonblank(line_number - 1)
-  let previous_line = getline(previous_line_number)
+    if line_number == 0
+      return 0
+    endif
 
-  exe "let indent = ".b:svelte_subtype_indentexpr
+    let sw = shiftwidth()
 
-  " Previous line like "#if" or "#each"
-  if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
-    let indent = indent + sw
-  endif
+    let current_line = getline(line_number)
+    let previous_line_number = prevnonblank(line_number - 1)
+    let previous_line = getline(previous_line_number)
 
-  " Previous line like ":else" or ":then"
-  if previous_line =~ '^\s*{\s*:\(else\|catch\|then\)'
-    let indent = indent + sw
-  endif
+    execute "let indent = " . s:html_indent
 
-  " Current line like ":else" or ":then"
-  if current_line =~ '^\s*{\s*:\(else\|catch\|then\)'
-    let indent = indent - sw
-  endif
+    " Previous line like "#if" or "#each"
+    if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
+      let indent = indent + sw
+    endif
 
-  if current_line =~ '^\s*{\s*\/\(await\|if\|each\)'
-    let indent = indent - sw
+    " Previous line like ":else" or ":then"
+    if previous_line =~ '^\s*{\s*:\(else\|catch\|then\)'
+      let indent = indent + sw
+    endif
+
+    " Previous line looks like an HTML element but the current line hasn't been
+    " indented.
+    if synID(previous_line_number, match(previous_line, '\S') + 1, 0) == hlID('htmlTag') && indent == indent(previous_line_number)
+      let indent = indent + sw
+    endif
+
+    " Current line like ":else" or ":then"
+    if current_line =~ '^\s*{\s*:\(else\|catch\|then\)'
+      let indent = indent - sw
+    endif
+
+    if current_line =~ '^\s*{\s*\/\(await\|if\|each\)'
+      let indent = indent - sw
+    endif
   endif
 
   return indent
