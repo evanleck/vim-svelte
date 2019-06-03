@@ -38,24 +38,25 @@ function! GetSvelteIndent()
 
   let previous_line_number = prevnonblank(current_line_number - 1)
   let previous_line = getline(previous_line_number)
+  let previous_line_indent = indent(previous_line_number)
 
   execute "let indent = " . s:html_indent
 
   " "#if" or "#each"
   if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
-    return indent(previous_line_number) + shiftwidth()
+    return previous_line_indent + shiftwidth()
   endif
 
   " ":else" or ":then"
   if previous_line =~ '^\s*{\s*:\(else\|catch\|then\)'
-    return indent(previous_line_number) + shiftwidth()
+    return previous_line_indent + shiftwidth()
   endif
 
   " Previous line looks like an HTML element, the current line hasn't been
   " indented, and the previous line is the start of a capitalized HTML element
   " or one with a colon in it e.g. "svelte:head".
   if synID(previous_line_number, match(previous_line, '\S') + 1, 0) == hlID('htmlTag')
-        \ && indent == indent(previous_line_number) && previous_line =~ '<\(\u\|\l\+:\l\+\)'
+        \ && indent == previous_line_indent && previous_line =~ '<\(\u\|\l\+:\l\+\)' && previous_line !~ '\/>$'
 
     return indent + shiftwidth()
   endif
