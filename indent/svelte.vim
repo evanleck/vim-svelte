@@ -8,33 +8,14 @@ if exists("b:did_indent")
   finish
 endif
 
-" All of the sub-language indentation logic is taken from
-" https://github.com/posva/vim-vue, which seems to have handled this really
-" nicely.
-function! s:get_indentexpr(language)
-  unlet! b:did_indent
-  execute 'runtime! indent/' . a:language . '.vim'
-  return &indentexpr
-endfunction
+runtime! indent/html.vim
+unlet! b:did_indent
 
-" HTML is left out, it will be used when there is no match.
-let s:languages = [
-      \   { 'name': 'css', 'pairs': ['<style', '</style>'] },
-      \   { 'name': 'javascript', 'pairs': ['<script', '</script>'] },
-      \ ]
-
-for s:language in s:languages
-  " Set 'indentexpr' if the user has an indent file installed for the language
-  if strlen(globpath(&rtp, 'indent/'. s:language.name .'.vim'))
-    let s:language.indentexpr = s:get_indentexpr(s:language.name)
-  endif
-endfor
-
-let s:html_indent = s:get_indentexpr('html')
+let s:html_indent = &l:indentexpr
 let b:did_indent = 1
 
 setlocal indentexpr=GetSvelteIndent()
-setlocal indentkeys=o,O,*<Return>,<>>,{,},0),0],!^F,=:else,=:then,=:catch,=/if,=/each,=/await
+setlocal indentkeys=o,O,*<Return>,<>>,{,},0),0],!^F,;,=:else,=:then,=:catch,=/if,=/each,=/await
 
 " Only define the function once.
 if exists('*GetSvelteIndent')
@@ -42,54 +23,81 @@ if exists('*GetSvelteIndent')
 endif
 
 function! GetSvelteIndent()
-  for language in s:languages
-    let opening_tag_line = searchpair(language.pairs[0], '', language.pairs[1], 'bWr')
+  let current_line_number = v:lnum
 
-    if opening_tag_line
-      execute 'let indent = ' . get(language, 'indentexpr', -1)
-      break
+  if current_line_number == 0
+    return 0
+  endif
+
+  let current_line = getline(current_line_number)
+
+  " Opening script and style tags should be all the way outdented.
+  if current_line =~ '^\s*<\(script\|style\)'
+    return 0
+  endif
+
+  let previous_line_number = prevnonblank(current_line_number - 1)
+  let previous_line = getline(previous_line_number)
+
+  execute "let indent = " . s:html_indent
+
+  " Previous line like "#if" or "#each"
+  if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
+    let indent = indent(previous_line_number) + shiftwidth()
+  endif
+
+  " Previous line like ":else" or ":then"
+  if previous_line =~ '^\s*{\s*:\(else\|catch\|then\)'
+    let indent = indent(previous_line_number) + shiftwidth()
+  endif
+
+  " Previous line looks like an HTML element, the current line hasn't been
+  " indented, and the previous line is the start of a capitalized HTML element
+  " or one with a colon in it e.g. "svelte:head".
+  if synID(previous_line_number, match(previous_line, '\S') + 1, 1) == hlID('htmlTag')
+        \ && indent == indent(previous_line_number) && previous_line =~ '<\(\u\|\l\+:\l\+\)'
+
+    let indent = indent + shiftwidth()
+  endif
+
+  " "/await" or ":catch" or ":then"
+  if current_line =~ '^\s*{\s*\/await' || current_line =~ '^\s*{\s*:\(catch\|then\)'
+    let await_start = searchpair('{\s*#await\>', '', '{\s*\/await\>', 'bW')
+
+    if await_start
+      let indent = indent(await_start)
     endif
-  endfor
+  endif
 
-  " Only evaluate if we didn't match a <script> or <style> block above.
-  if !exists('l:indent')
-    let line_number = v:lnum
+  " "/each"
+  if current_line =~ '^\s*{\s*\/each'
+    let each_start = searchpair('{\s*#each\>', '', '{\s*\/each\>', 'bW')
 
-    if line_number == 0
-      return 0
+    if each_start
+      let indent = indent(each_start)
     endif
+  endif
 
-    let sw = shiftwidth()
+  if current_line =~ '^\s*{\s*\/if'
+    let if_start = searchpair('{\s*#if\>', '', '{\s*\/if\>', 'bW')
 
-    let current_line = getline(line_number)
-    let previous_line_number = prevnonblank(line_number - 1)
-    let previous_line = getline(previous_line_number)
-
-    execute "let indent = " . s:html_indent
-
-    " Previous line like "#if" or "#each"
-    if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
-      let indent = indent + sw
+    if if_start
+      let indent = indent(if_start)
     endif
+  endif
 
-    " Previous line like ":else" or ":then"
-    if previous_line =~ '^\s*{\s*:\(else\|catch\|then\)'
-      let indent = indent + sw
-    endif
+  " ":else" is tricky because it can match an opening "#each" _or_ an opening
+  " "#if", so we try to be smart and look for the closest of the two.
+  if current_line =~ '^\s*{\s*:else'
+    let if_start = searchpair('{\s*#if\>', '', '{\s*\/if\>', 'bW')
 
-    " Previous line looks like an HTML element but the current line hasn't been
-    " indented.
-    if synID(previous_line_number, match(previous_line, '\S') + 1, 0) == hlID('htmlTag') && indent == indent(previous_line_number)
-      let indent = indent + sw
-    endif
-
-    " Current line like ":else" or ":then"
-    if current_line =~ '^\s*{\s*:\(else\|catch\|then\)'
-      let indent = indent - sw
-    endif
-
-    if current_line =~ '^\s*{\s*\/\(await\|if\|each\)'
-      let indent = indent - sw
+    " If it's an "else if" then we know to look for an "#if"
+    if current_line =~ '^\s*{\s*:else if' && if_start
+      let indent = indent(if_start)
+    else
+      " The greater line number will be closer to the cursor position because
+      " we're searching backward.
+      let indent = indent(max([if_start, searchpair('{\s*#each\>', '', '{\s*\/each\>', 'bW')]))
     endif
   endif
 
