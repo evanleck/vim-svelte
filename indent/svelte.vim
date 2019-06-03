@@ -41,23 +41,23 @@ function! GetSvelteIndent()
 
   execute "let indent = " . s:html_indent
 
-  " Previous line like "#if" or "#each"
+  " "#if" or "#each"
   if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
-    let indent = indent(previous_line_number) + shiftwidth()
+    return indent(previous_line_number) + shiftwidth()
   endif
 
-  " Previous line like ":else" or ":then"
+  " ":else" or ":then"
   if previous_line =~ '^\s*{\s*:\(else\|catch\|then\)'
-    let indent = indent(previous_line_number) + shiftwidth()
+    return indent(previous_line_number) + shiftwidth()
   endif
 
   " Previous line looks like an HTML element, the current line hasn't been
   " indented, and the previous line is the start of a capitalized HTML element
   " or one with a colon in it e.g. "svelte:head".
-  if synID(previous_line_number, match(previous_line, '\S') + 1, 1) == hlID('htmlTag')
+  if synID(previous_line_number, match(previous_line, '\S') + 1, 0) == hlID('htmlTag')
         \ && indent == indent(previous_line_number) && previous_line =~ '<\(\u\|\l\+:\l\+\)'
 
-    let indent = indent + shiftwidth()
+    return indent + shiftwidth()
   endif
 
   " "/await" or ":catch" or ":then"
@@ -65,7 +65,7 @@ function! GetSvelteIndent()
     let await_start = searchpair('{\s*#await\>', '', '{\s*\/await\>', 'bW')
 
     if await_start
-      let indent = indent(await_start)
+      return indent(await_start)
     endif
   endif
 
@@ -74,15 +74,16 @@ function! GetSvelteIndent()
     let each_start = searchpair('{\s*#each\>', '', '{\s*\/each\>', 'bW')
 
     if each_start
-      let indent = indent(each_start)
+      return indent(each_start)
     endif
   endif
 
+  " "/if"
   if current_line =~ '^\s*{\s*\/if'
     let if_start = searchpair('{\s*#if\>', '', '{\s*\/if\>', 'bW')
 
     if if_start
-      let indent = indent(if_start)
+      return indent(if_start)
     endif
   endif
 
@@ -93,11 +94,11 @@ function! GetSvelteIndent()
 
     " If it's an "else if" then we know to look for an "#if"
     if current_line =~ '^\s*{\s*:else if' && if_start
-      let indent = indent(if_start)
+      return indent(if_start)
     else
       " The greater line number will be closer to the cursor position because
       " we're searching backward.
-      let indent = indent(max([if_start, searchpair('{\s*#each\>', '', '{\s*\/each\>', 'bW')]))
+      return indent(max([if_start, searchpair('{\s*#each\>', '', '{\s*\/each\>', 'bW')]))
     endif
   endif
 
