@@ -63,13 +63,21 @@ function! GetSvelteIndent()
     return previous_line_indent + shiftwidth()
   endif
 
-  " Previous line looks like an HTML element, the current line hasn't been
-  " indented, and the previous line is the start of a capitalized HTML element
-  " or one with a colon in it e.g. "svelte:head".
   if synID(previous_line_number, match(previous_line, '\S') + 1, 0) == hlID('htmlTag')
-        \ && indent == previous_line_indent && previous_line =~ '<\(\u\|\l\+:\l\+\)' && previous_line !~ '\/>$'
+    " Previous line looks like an HTML element, the current line hasn't been
+    " indented, and the previous line is the start of a capitalized HTML element
+    " or one with a colon in it e.g. "svelte:head".
+    if indent == previous_line_indent && previous_line =~ '<\(\u\|\l\+:\l\+\)' && previous_line !~ '/>$'
+      return previous_line_indent + shiftwidth()
 
-    return indent + shiftwidth()
+    " Previous line looks like an HTML element, the current line _has_ been
+    " indented, _and_ the previous line is a closing tag.
+    "
+    " This is necessary because the HTML indentation kinda goofs up with
+    " self-closing custom or non-standard tags.
+    elseif indent != previous_line_indent && previous_line =~ '/>$'
+      return previous_line_indent
+    endif
   endif
 
   " "/await" or ":catch" or ":then"
