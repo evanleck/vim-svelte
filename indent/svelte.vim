@@ -47,6 +47,12 @@ function! GetSvelteIndent()
 
   execute "let indent = " . s:html_indent
 
+  " For some reason, the HTML CSS indentation keeps indenting the next line over
+  " and over after each style declaration.
+  if searchpair('<style>', '', '</style>', 'bW') && previous_line =~ ';$'
+    return previous_line_indent
+  endif
+
   " "#if" or "#each"
   if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
     return previous_line_indent + shiftwidth()
