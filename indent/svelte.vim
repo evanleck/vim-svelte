@@ -40,6 +40,11 @@ function! GetSvelteIndent()
   let previous_line = getline(previous_line_number)
   let previous_line_indent = indent(previous_line_number)
 
+  " The inside of scripts an styles should be indented.
+  if previous_line =~ '^<\(script\|style\)'
+    return shiftwidth()
+  endif
+
   execute "let indent = " . s:html_indent
 
   " "#if" or "#each"
