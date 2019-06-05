@@ -32,7 +32,7 @@ function! GetSvelteIndent()
   let current_line = getline(current_line_number)
 
   " Opening script and style tags should be all the way outdented.
-  if current_line =~ '^\s*<\(script\|style\)'
+  if current_line =~ '^\s*</\?\(script\|style\)'
     return 0
   endif
 
@@ -49,7 +49,7 @@ function! GetSvelteIndent()
 
   " For some reason, the HTML CSS indentation keeps indenting the next line over
   " and over after each style declaration.
-  if searchpair('<style>', '', '</style>', 'bW') && previous_line =~ ';$'
+  if searchpair('<style>', '', '</style>', 'bW') && previous_line =~ ';$' && current_line !~ '}'
     return previous_line_indent
   endif
 
@@ -63,19 +63,17 @@ function! GetSvelteIndent()
     return previous_line_indent + shiftwidth()
   endif
 
+  " Custom element juggling for abnormal self-closing tags (<Widget />),
+  " capitalized component tags (<Widget></Widget>), and custom svelte tags
+  " (<svelte:head></svelte:head>).
   if synID(previous_line_number, match(previous_line, '\S') + 1, 0) == hlID('htmlTag')
-    " Previous line looks like an HTML element, the current line hasn't been
-    " indented, and the previous line is the start of a capitalized HTML element
-    " or one with a colon in it e.g. "svelte:head".
-    if indent == previous_line_indent && previous_line =~ '<\(\u\|\l\+:\l\+\)' && previous_line !~ '/>$'
-      return previous_line_indent + shiftwidth()
+        \ && synID(current_line_number, match(current_line, '\S') + 1, 0) != hlID('htmlEndTag')
+    let indents_match = indent == previous_line_indent
+    let previous_closes = previous_line =~ '/>$'
 
-    " Previous line looks like an HTML element, the current line _has_ been
-    " indented, _and_ the previous line is a closing tag.
-    "
-    " This is necessary because the HTML indentation kinda goofs up with
-    " self-closing custom or non-standard tags.
-    elseif indent != previous_line_indent && previous_line =~ '/>$'
+    if indents_match && !previous_closes && previous_line =~ '<\(\u\|\l\+:\l\+\)'
+      return previous_line_indent + shiftwidth()
+    elseif !indents_match && previous_closes
       return previous_line_indent
     endif
   endif
