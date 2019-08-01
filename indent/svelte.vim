@@ -14,6 +14,14 @@ unlet! b:did_indent
 let s:html_indent = &l:indentexpr
 let b:did_indent = 1
 
+if !exists('g:svelte_indent_script')
+  let g:svelte_indent_script = 1
+endif
+
+if !exists('g:svelte_indent_style')
+  let g:svelte_indent_style = 1
+endif
+
 setlocal indentexpr=GetSvelteIndent()
 setlocal indentkeys=o,O,*<Return>,<>>,{,},0),0],!^F,;,=:else,=:then,=:catch,=/if,=/each,=/await
 
@@ -40,9 +48,21 @@ function! GetSvelteIndent()
   let previous_line = getline(previous_line_number)
   let previous_line_indent = indent(previous_line_number)
 
-  " The inside of scripts an styles should be indented.
-  if previous_line =~ '^<\(script\|style\)'
-    return shiftwidth()
+  " The inside of scripts an styles should be indented unless disabled.
+  if previous_line =~ '^\s*<script'
+    if g:svelte_indent_script
+      return previous_line_indent + shiftwidth()
+    else
+      return previous_line_indent
+    endif
+  endif
+
+  if previous_line =~ '^\s*<style'
+    if g:svelte_indent_style
+      return previous_line_indent + shiftwidth()
+    else
+      return previous_line_indent
+    endif
   endif
 
   execute "let indent = " . s:html_indent

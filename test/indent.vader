@@ -1,0 +1,176 @@
+Given svelte (a svelte: tag):
+  <svelte:head>
+    <title>Foo</title>
+    </svelte:head>
+
+Do (indent the block):
+  vip=
+
+Expect svelte (an indented svelte: tag):
+  <svelte:head>
+    <title>Foo</title>
+  </svelte:head>
+
+
+Given svelte (a sequence of self-closing tags):
+  <Foo/>
+    <Foo {bar}/>
+      <Foo bar={bar}/>
+    <Foo bar="{bar}"/>
+
+Do (indent the block):
+  vip=
+
+Expect svelte (an indented sequence of self-closing tags):
+  <Foo/>
+  <Foo {bar}/>
+  <Foo bar={bar}/>
+  <Foo bar="{bar}"/>
+
+
+Given svelte (a mix of self-closing and normal custom tags):
+  <Foo>
+  <Bar/>
+  </Foo>
+  <Foo>
+      <Bar />
+  </Foo>
+  <Foo>
+  <Bar></Bar>
+  </Foo>
+
+Do (indent the block):
+  vip=
+
+Expect svelte (an indented mix of self-closing and normal custom tags):
+  <Foo>
+    <Bar/>
+  </Foo>
+  <Foo>
+    <Bar />
+  </Foo>
+  <Foo>
+    <Bar></Bar>
+  </Foo>
+
+
+Given svelte (a combination of normal and capitalize tags):
+  <Foo>
+    <Bar>
+      <Baz />
+      </Bar>
+    </Foo>
+  <Foo>
+  <div>
+      <Baz />
+      </div>
+    </Foo>
+
+Do (indent the block):
+  vip=
+
+Expect svelte (indented block):
+  <Foo>
+    <Bar>
+      <Baz />
+    </Bar>
+  </Foo>
+  <Foo>
+    <div>
+      <Baz />
+    </div>
+  </Foo>
+
+
+Given svelte (namespaced tags):
+  <Widget.Foo>
+  <div>
+      <Baz />
+      </div>
+    </Widget.Foo>
+
+Do (indent the block):
+  vip=
+
+Expect svelte (indented block):
+  <Widget.Foo>
+    <div>
+      <Baz />
+    </div>
+  </Widget.Foo>
+
+
+Given svelte (outdented style tag):
+  <style>
+  .foo {
+        bar: 1;
+    }
+  </style>
+
+Do (indent the block):
+  vip=
+
+Expect svelte (indented style tag):
+  <style>
+    .foo {
+      bar: 1;
+    }
+  </style>
+
+
+Given svelte (outdented script tag):
+  <script>
+  import { foo } from "./stores.js"
+  </script>
+
+Do (indent the block):
+  vip=
+
+Expect svelte (indented script tag):
+  <script>
+    import { foo } from "./stores.js"
+  </script>
+
+
+Execute (turn off script indenting):
+  let g:svelte_indent_script = 0
+
+Given svelte (an outdented script tag):
+  <script>
+  import { foo } from "./stores.js"
+  </script>
+
+Do (indent the block):
+  vip=
+
+Expect svelte (an outdented script tag):
+  <script>
+  import { foo } from "./stores.js"
+  </script>
+
+Execute (reset script indenting):
+  unlet g:svelte_indent_script
+
+
+Execute (turn off style indenting):
+  let g:svelte_indent_style = 0
+
+Given svelte (an outdented style tag):
+  <style>
+  .foo {
+    bar: 1;
+  }
+  </style>
+
+Do (indent the block):
+  vip=
+
+Expect svelte (an outdented style tag):
+  <style>
+  .foo {
+    bar: 1;
+  }
+  </style>
+
+Execute (reset style indenting):
+  unlet g:svelte_indent_style

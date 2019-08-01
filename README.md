@@ -38,11 +38,17 @@ Plug 'evanleck/vim-svelte'
 ```
 
 
+## Options
+
+To disable indentation within `<script>` and `<style>` tags, set one of these
+variables in your `vimrc`:
+
+```vim
+let g:svelte_indent_script = 0
+let g:svelte_indent_style = 0
+```
+
+
 ## Alternatives
 
 1. [burner/vim-svelte](https://github.com/burner/vim-svelte)
-
-
-## Todo
-
-1. Write some tests using [Vader](https://github.com/junegunn/vader.vim).
