@@ -73,31 +73,6 @@ function! GetSvelteIndent()
     return previous_line_indent
   endif
 
-  " "#if" or "#each"
-  if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
-    return previous_line_indent + shiftwidth()
-  endif
-
-  " ":else" or ":then"
-  if previous_line =~ '^\s*{\s*:\(else\|catch\|then\)'
-    return previous_line_indent + shiftwidth()
-  endif
-
-  " Custom element juggling for abnormal self-closing tags (<Widget />),
-  " capitalized component tags (<Widget></Widget>), and custom svelte tags
-  " (<svelte:head></svelte:head>).
-  if synID(previous_line_number, match(previous_line, '\S') + 1, 0) == hlID('htmlTag')
-        \ && synID(current_line_number, match(current_line, '\S') + 1, 0) != hlID('htmlEndTag')
-    let indents_match = indent == previous_line_indent
-    let previous_closes = previous_line =~ '/>$'
-
-    if indents_match && !previous_closes && previous_line =~ '<\(\u\|\l\+:\l\+\)'
-      return previous_line_indent + shiftwidth()
-    elseif !indents_match && previous_closes
-      return previous_line_indent
-    endif
-  endif
-
   " "/await" or ":catch" or ":then"
   if current_line =~ '^\s*{\s*\/await' || current_line =~ '^\s*{\s*:\(catch\|then\)'
     let await_start = searchpair('{\s*#await\>', '', '{\s*\/await\>', 'bW')
@@ -137,6 +112,31 @@ function! GetSvelteIndent()
       " The greater line number will be closer to the cursor position because
       " we're searching backward.
       return indent(max([if_start, searchpair('{\s*#each\>', '', '{\s*\/each\>', 'bW')]))
+    endif
+  endif
+
+  " "#if" or "#each"
+  if previous_line =~ '^\s*{\s*#\(if\|each\|await\)'
+    return previous_line_indent + shiftwidth()
+  endif
+
+  " ":else" or ":then"
+  if previous_line =~ '^\s*{\s*:\(else\|catch\|then\)'
+    return previous_line_indent + shiftwidth()
+  endif
+
+  " Custom element juggling for abnormal self-closing tags (<Widget />),
+  " capitalized component tags (<Widget></Widget>), and custom svelte tags
+  " (<svelte:head></svelte:head>).
+  if synID(previous_line_number, match(previous_line, '\S') + 1, 0) == hlID('htmlTag')
+        \ && synID(current_line_number, match(current_line, '\S') + 1, 0) != hlID('htmlEndTag')
+    let indents_match = indent == previous_line_indent
+    let previous_closes = previous_line =~ '/>$'
+
+    if indents_match && !previous_closes && previous_line =~ '<\(\u\|\l\+:\l\+\)'
+      return previous_line_indent + shiftwidth()
+    elseif !indents_match && previous_closes
+      return previous_line_indent
     endif
   endif
 
