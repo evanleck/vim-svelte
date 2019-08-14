@@ -1,3 +1,15 @@
+Given svelte (an open tag right after a close tag):
+  {#if something}
+    {/if}
+
+Do (indent the block):
+  vip=
+
+Expect svelte (matching indentation of the opening and closing tags):
+  {#if something}
+  {/if}
+
+
 Given svelte (a svelte: tag):
   <svelte:head>
     <title>Foo</title>
