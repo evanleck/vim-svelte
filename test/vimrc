@@ -2,7 +2,7 @@ set nocompatible
 
 filetype off
 
-set runtimepath+=~/Clones/vader.vim
+set runtimepath+=vader.vim
 set runtimepath+=.
 
 set expandtab
