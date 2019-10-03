@@ -49,6 +49,14 @@ let g:svelte_indent_style = 0
 ```
 
 
+## Tests
+
+Indentation tests are provided and any contributions would be much appreciated.
+They can be run with `make test` which will clone
+[vader.vim](https://github.com/junegunn/vader.vim) into the current working
+directory and run the test suite.
+
+
 ## Alternatives
 
 1. [burner/vim-svelte](https://github.com/burner/vim-svelte)
