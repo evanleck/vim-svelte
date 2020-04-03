@@ -1,7 +1,6 @@
 # vim-svelte
 
-Vim syntax highlighting and indentation for [Svelte 3](https://svelte.dev)
-components.
+Vim syntax highlighting and indentation for [Svelte 3][svelte] components.
 
 This is mostly just HTML syntax highlighting with some keywords added and all
 expressions inside of `{` and `}` highlighted as JavaScript.
@@ -18,24 +17,31 @@ Highlighting includes:
 ## Dependencies
 
 The JavaScript highlighting depends on
-[pangloss/vim-javascript](https://github.com/pangloss/vim-javascript). That
-ships with [sheerun/vim-polyglot](https://github.com/sheerun/vim-polyglot) so if
-you're already using that then you should be set.
+[pangloss/vim-javascript][vim-javascript]. That ships with
+[sheerun/vim-polyglot][vim-polyglot] so if you're already using that then you
+should be set.
 
 
 ## Installation
 
-1. Install [Pathogen](https://github.com/tpope/vim-pathogen),
-   [Vundle](https://github.com/VundleVim/Vundle.vim),
-   [NeoBundle](https://github.com/Shougo/neobundle.vim), or
-   [Plug](https://github.com/junegunn/vim-plug) package manager for Vim.
-2. Use this repository as submodule or package.
+The simplest way to install vim-svelte is via a package manager like
+[Pathogen][pathogen], [Vundle][vundle], [NeoBundle][neobundle],
+[Plug][vim-plug], or [minpac][minpac]. I personally use minpac, but it shouldn't
+matter whatsoever.
 
-For example when using [Plug](https://github.com/junegunn/vim-plug):
+For example, using minpac:
 
+```vimscript
+call minpac#add('evanleck/vim-svelte')
 ```
+
+Or using Plug:
+
+```vimscript
 Plug 'evanleck/vim-svelte'
 ```
+
+vim-svelte should work just fine with Vim 8's native package loading as well.
 
 
 ## Options
@@ -49,14 +55,35 @@ let g:svelte_indent_style = 0
 ```
 
 
+## Integrations
+
+- [matchit.vim][matchit]: vim-svelte should work out of the box and allow moving
+  between HTML tags as well as flow control like `#if/:else//if`.
+- [ALE][ale]: vim-svelte should work out of hte box with `eslint` and a few
+  other linters/fixers. PRs welcome if the one you want is missing.
+
+
 ## Tests
 
 Indentation tests are provided and any contributions would be much appreciated.
-They can be run with `make test` which will clone
-[vader.vim](https://github.com/junegunn/vader.vim) into the current working
-directory and run the test suite.
+They can be run with `make test` which will clone [vader.vim][vader] into the
+current working directory and run the test suite.
 
 
 ## Alternatives
 
-1. [burner/vim-svelte](https://github.com/burner/vim-svelte)
+1. [burner/vim-svelte][burner]
+
+
+[ale]: https://github.com/dense-analysis/ale
+[burner]: https://github.com/burner/vim-svelte
+[matchit]: https://github.com/adelarsq/vim-matchit
+[minpac]: https://github.com/k-takata/minpac
+[neobundle]: https://github.com/Shougo/neobundle.vim
+[pathogen]: https://github.com/tpope/vim-pathogen
+[svelte]: https://svelte.dev
+[vader]: https://github.com/junegunn/vader.vim
+[vim-javascript]: https://github.com/pangloss/vim-javascript
+[vim-plug]: https://github.com/junegunn/vim-plug
+[vim-polyglot]: https://github.com/sheerun/vim-polyglot
+[vundle]: https://github.com/VundleVim/Vundle.vim
