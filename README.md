@@ -57,10 +57,10 @@ let g:svelte_indent_style = 0
 
 ## Integrations
 
+- [ALE][ale]: vim-svelte should work out of the box with `eslint` and a few
+  other linters/fixers. PRs welcome if the one you want is missing.
 - [matchit.vim][matchit]: vim-svelte should work out of the box and allow moving
   between HTML tags as well as flow control like `#if/:else//if`.
-- [ALE][ale]: vim-svelte should work out of hte box with `eslint` and a few
-  other linters/fixers. PRs welcome if the one you want is missing.
 
 
 ## Tests
@@ -73,10 +73,12 @@ current working directory and run the test suite.
 ## Alternatives
 
 1. [burner/vim-svelte][burner]
+2. [leafOfTree/vim-svelte-plugin][leafOfTree]
 
 
 [ale]: https://github.com/dense-analysis/ale
 [burner]: https://github.com/burner/vim-svelte
+[leafOfTree]: https://github.com/leafOfTree/vim-svelte-plugin
 [matchit]: https://github.com/adelarsq/vim-matchit
 [minpac]: https://github.com/k-takata/minpac
 [neobundle]: https://github.com/Shougo/neobundle.vim
