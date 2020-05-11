@@ -26,8 +26,7 @@ should be set.
 
 The simplest way to install vim-svelte is via a package manager like
 [Pathogen][pathogen], [Vundle][vundle], [NeoBundle][neobundle],
-[Plug][vim-plug], or [minpac][minpac]. I personally use minpac, but it shouldn't
-matter whatsoever.
+[Plug][vim-plug], or [minpac][minpac].
 
 For example, using minpac:
 
@@ -41,7 +40,8 @@ Or using Plug:
 Plug 'evanleck/vim-svelte'
 ```
 
-vim-svelte should work just fine with Vim 8's native package loading as well.
+vim-svelte works just fine with Vim 8's native package loading as well, that's
+what I use.
 
 
 ## Options
