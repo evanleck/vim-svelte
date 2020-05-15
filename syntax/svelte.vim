@@ -32,27 +32,27 @@ syntax keyword svelteKeyword slot contained containedin=htmlTag
 
 " According to vim-jsx, you can let jsBlock take care of ending the region.
 "   https://github.com/mxw/vim-jsx/blob/master/after/syntax/jsx.vim
-syntax region svelteExpression start="{" end="" contains=jsBlock,javascriptBlock containedin=htmlString,htmlTag,htmlArg,htmlValue,htmlH1,htmlH2,htmlH3,htmlH4,htmlH5,htmlH6,htmlHead,htmlTitle,htmlBoldItalicUnderline,htmlUnderlineBold,htmlUnderlineItalicBold,htmlUnderlineBoldItalic,htmlItalicUnderline,htmlItalicBold,htmlItalicBoldUnderline,htmlItalicUnderlineBold,htmlLink,htmlLeadingSpace,htmlBold,htmlBoldUnderline,htmlBoldItalic,htmlBoldUnderlineItalic,htmlUnderline,htmlUnderlineItalic,htmlItalic,htmlStrike,javaScript
+syntax region svelteExpression start="{" end="" contains=jsBlock,javascriptBlock,typescriptBlock containedin=htmlString,htmlTag,htmlArg,htmlValue,htmlH1,htmlH2,htmlH3,htmlH4,htmlH5,htmlH6,htmlHead,htmlTitle,htmlBoldItalicUnderline,htmlUnderlineBold,htmlUnderlineItalicBold,htmlUnderlineBoldItalic,htmlItalicUnderline,htmlItalicBold,htmlItalicBoldUnderline,htmlItalicUnderlineBold,htmlLink,htmlLeadingSpace,htmlBold,htmlBoldUnderline,htmlBoldItalic,htmlBoldUnderlineItalic,htmlUnderline,htmlUnderlineItalic,htmlItalic,htmlStrike,javaScript
 
 " Block conditionals.
-syntax match svelteConditional "#if" contained containedin=jsBlock,javascriptBlock
-syntax match svelteConditional "/if" contained containedin=jsBlock,javascriptBlock
-syntax match svelteConditional ":else if" contained containedin=jsBlock,javascriptBlock
-syntax match svelteConditional ":else" contained containedin=jsBlock,javascriptBlock
+syntax match svelteConditional "#if" contained containedin=jsBlock,javascriptBlock,typescriptBlock
+syntax match svelteConditional "/if" contained containedin=jsBlock,javascriptBlock,typescriptBlock
+syntax match svelteConditional ":else if" contained containedin=jsBlock,javascriptBlock,typescriptBlock
+syntax match svelteConditional ":else" contained containedin=jsBlock,javascriptBlock,typescriptBlock
 
 " Block keywords.
-syntax match svelteKeyword "#await" contained containedin=jsBlock,javascriptBlock
-syntax match svelteKeyword "/await" contained containedin=jsBlock,javascriptBlock
-syntax match svelteKeyword ":catch" contained containedin=jsBlock,javascriptBlock
-syntax match svelteKeyword ":then" contained containedin=jsBlock,javascriptBlock
+syntax match svelteKeyword "#await" contained containedin=jsBlock,javascriptBlock,typescriptBlock
+syntax match svelteKeyword "/await" contained containedin=jsBlock,javascriptBlock,typescriptBlock
+syntax match svelteKeyword ":catch" contained containedin=jsBlock,javascriptBlock,typescriptBlock
+syntax match svelteKeyword ":then" contained containedin=jsBlock,javascriptBlock,typescriptBlock
 
 " Inline keywords.
-syntax match svelteKeyword "@html" contained containedin=jsBlock,javascriptBlock
-syntax match svelteKeyword "@debug" contained containedin=jsBlock,javascriptBlock
+syntax match svelteKeyword "@html" contained containedin=jsBlock,javascriptBlock,typescriptBlock
+syntax match svelteKeyword "@debug" contained containedin=jsBlock,javascriptBlock,typescriptBlock
 
 " Repeat functions.
-syntax match svelteRepeat "#each" contained containedin=jsBlock,javascriptBlock
-syntax match svelteRepeat "/each" contained containedin=jsBlock,javascriptBlock
+syntax match svelteRepeat "#each" contained containedin=jsBlock,javascriptBlock,typescriptBlock
+syntax match svelteRepeat "/each" contained containedin=jsBlock,javascriptBlock,typescriptBlock
 
 highlight def link svelteConditional Conditional
 highlight def link svelteKeyword Keyword
