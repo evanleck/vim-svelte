@@ -58,8 +58,10 @@ highlight def link svelteConditional Conditional
 highlight def link svelteKeyword Keyword
 highlight def link svelteRepeat Repeat
 
-" Taken from vim-vue:
+" -----------------------------------------------------------------------------
+" Everything below forked from vim-vue:
 " https://github.com/posva/vim-vue/blob/c424294e769b26659176065f9713c395731f7b3a/syntax/vue.vim#L20-L74
+" -----------------------------------------------------------------------------
 " Get the pattern for a HTML {name} attribute with {value}.
 function! s:attr(name, value)
   return a:name . '=\("\|''\)[^\1]*' . a:value . '[^\1]*\1'
@@ -112,5 +114,9 @@ syn keyword htmlArg contained scoped ts
 syn match htmlArg "[@v:][-:.0-9_a-z]*\>" contained
 
 syntax sync fromstart
+" -----------------------------------------------------------------------------
+" Everything above forked from vim-vue:
+" https://github.com/posva/vim-vue/blob/c424294e769b26659176065f9713c395731f7b3a/syntax/vue.vim#L20-L74
+" -----------------------------------------------------------------------------
 
 let b:current_syntax = "svelte"
