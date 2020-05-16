@@ -58,7 +58,8 @@ highlight def link svelteConditional Conditional
 highlight def link svelteKeyword Keyword
 highlight def link svelteRepeat Repeat
 
-" Taken from vim-vue
+" Taken from vim-vue:
+" https://github.com/posva/vim-vue/blob/c424294e769b26659176065f9713c395731f7b3a/syntax/vue.vim#L20-L74
 " Get the pattern for a HTML {name} attribute with {value}.
 function! s:attr(name, value)
   return a:name . '=\("\|''\)[^\1]*' . a:value . '[^\1]*\1'
@@ -81,8 +82,12 @@ function! s:should_register(language, start_pattern)
   return 1
 endfunction
 
+" If there is desire to support more preprocessors, borrow from the vim-vue
+" syntax configuration.
 let s:languages = [
       \ {'name': 'typescript', 'tag': 'script', 'attr_pattern': '\%(lang=\("\|''\)[^\1]*\(ts\|typescript\)[^\1]*\1\|ts\)'},
+      \ {'name': 'less', 'tag': 'style'},
+      \ {'name': 'scss', 'tag': 'style'},
       \ ]
 
 for s:language in s:languages
@@ -105,5 +110,7 @@ syn region svelteSurroundingTag contained start=+<\(script\|style\|template\)+ e
 syn keyword htmlSpecialTagName contained template
 syn keyword htmlArg contained scoped ts
 syn match htmlArg "[@v:][-:.0-9_a-z]*\>" contained
+
+syntax sync fromstart
 
 let b:current_syntax = "svelte"
