@@ -55,6 +55,44 @@ let g:svelte_indent_style = 0
 ```
 
 
+## Preprocessed languages
+
+Syntax highlighting for additional languages is supported, assuming you have a
+corresponding syntax definition installed. For example, newer versions of Vim
+ship with a TypeScript syntax definition, so you wouldn't need anything
+additional installed for that to work. Supported languages include:
+
+- `less`
+- `scss`
+- `sass`
+- `stylus`
+- `typescript`
+
+Since Svelte doesn't support these out of the box (see
+[svelte-preprocess][preprocess] for how to set up some common language
+`g:svelte_preprocessors` variable:
+default so the first thing you'll need to do is enable your languages via the
+preprocessors with e.g. Rollup), they're all disabled by
+
+```vim
+let g:svelte_preprocessors = ['typescript']
+```
+
+Then, use your language in your Svelte components like this:
+
+```html
+<script lang='typescript'>
+</script>
+
+<!-- Or... -->
+<style type='text/scss'>
+</style>
+```
+
+Note, that enabling and loading a lot of different syntax definitions
+can considerably degrade Vim's performance. Consider yourself warned.
+
+
 ## Integrations
 
 - [ALE][ale]: vim-svelte should work out of the box with `eslint` and a few
@@ -83,6 +121,7 @@ current working directory and run the test suite.
 [minpac]: https://github.com/k-takata/minpac
 [neobundle]: https://github.com/Shougo/neobundle.vim
 [pathogen]: https://github.com/tpope/vim-pathogen
+[preprocess]: https://github.com/sveltejs/svelte-preprocess
 [svelte]: https://svelte.dev
 [vader]: https://github.com/junegunn/vader.vim
 [vim-javascript]: https://github.com/pangloss/vim-javascript

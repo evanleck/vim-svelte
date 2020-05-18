@@ -34,6 +34,8 @@ syntax keyword svelteKeyword slot contained containedin=htmlTag
 "   https://github.com/mxw/vim-jsx/blob/master/after/syntax/jsx.vim
 syntax region svelteExpression start="{" end="" contains=jsBlock,javascriptBlock containedin=htmlString,htmlTag,htmlArg,htmlValue,htmlH1,htmlH2,htmlH3,htmlH4,htmlH5,htmlH6,htmlHead,htmlTitle,htmlBoldItalicUnderline,htmlUnderlineBold,htmlUnderlineItalicBold,htmlUnderlineBoldItalic,htmlItalicUnderline,htmlItalicBold,htmlItalicBoldUnderline,htmlItalicUnderlineBold,htmlLink,htmlLeadingSpace,htmlBold,htmlBoldUnderline,htmlBoldItalic,htmlBoldUnderlineItalic,htmlUnderline,htmlUnderlineItalic,htmlItalic,htmlStrike,javaScript
 
+syntax region svelteSurroundingTag contained start=+<\(script\|style\|template\)+ end=+>+ fold contains=htmlTagN,htmlString,htmlArg,htmlValue,htmlTagError,htmlEvent
+
 " Block conditionals.
 syntax match svelteConditional "#if" contained containedin=jsBlock,javascriptBlock
 syntax match svelteConditional "/if" contained containedin=jsBlock,javascriptBlock
@@ -58,65 +60,57 @@ highlight def link svelteConditional Conditional
 highlight def link svelteKeyword Keyword
 highlight def link svelteRepeat Repeat
 
-" -----------------------------------------------------------------------------
-" Everything below forked from vim-vue:
-" https://github.com/posva/vim-vue/blob/c424294e769b26659176065f9713c395731f7b3a/syntax/vue.vim#L20-L74
-" -----------------------------------------------------------------------------
-" Get the pattern for a HTML {name} attribute with {value}.
-function! s:attr(name, value)
-  return a:name . '=\("\|''\)[^\1]*' . a:value . '[^\1]*\1'
-endfunction
+" Preprocessed languages that aren't supported out of the box by Svelte require
+" additional syntax files to be pulled in and can slow Vim down a bit. For that
+" reason, preprocessed languages must be enabled manually. Note that some may
+" require additional plugins that contain the actual syntax definitions.
+"
+" Heavily cribbed from https://github.com/posva/vim-vue and largely completed by
+" @davidroeca (thank you!).
 
-function! s:should_register(language, start_pattern)
+" A syntax should be registered if there's a valid syntax definition known to
+" Vim and it is enabled for the Svelte plugin.
+function! s:enabled(language)
   " Check whether a syntax file for {language} exists
   if empty(globpath(&runtimepath, 'syntax/' . a:language . '.vim'))
     return 0
   endif
 
-  if exists('g:svelte_pre_processors')
-    if type(g:svelte_pre_processors) == v:t_list
-      return index(g:svelte_pre_processors, s:language.name) != -1
-    elseif g:svelte_pre_processors is# 'detect_on_enter'
-      return search(a:start_pattern, 'n') != 0
-    endif
+  " If g:svelte_preprocessors is set, check for it there, otherwise return 0.
+  if exists('g:svelte_preprocessors') && type(g:svelte_preprocessors) == v:t_list
+    return index(g:svelte_preprocessors, a:language) != -1
+  else
+    return 0
   endif
-
-  return 1
 endfunction
 
-" If there is desire to support more preprocessors, borrow from the vim-vue
-" syntax configuration.
 let s:languages = [
-      \ {'name': 'typescript', 'tag': 'script', 'attr_pattern': '\%(lang=\("\|''\)[^\1]*\(ts\|typescript\)[^\1]*\1\|ts\)'},
-      \ {'name': 'less', 'tag': 'style'},
-      \ {'name': 'scss', 'tag': 'style'},
+      \ { 'name': 'less', 'tag': 'style' },
+      \ { 'name': 'scss', 'tag': 'style' },
+      \ { 'name': 'sass', 'tag': 'style' },
+      \ { 'name': 'stylus', 'tag': 'style' },
+      \ { 'name': 'typescript', 'tag': 'script' },
       \ ]
 
 for s:language in s:languages
-  let s:attr_pattern = has_key(s:language, 'attr_pattern') ? s:language.attr_pattern : s:attr('lang', s:language.name)
-  let s:start_pattern = '<' . s:language.tag . '\>\_[^>]*' . s:attr_pattern . '\_[^>]*>'
+  let s:attr = '\(lang\|type\)=\("\|''\)[^\2]*' . s:language.name . '[^\2]*\2'
+  let s:start = '<' . s:language.tag . '\>\_[^>]*' . s:attr . '\_[^>]*>'
 
-  if s:should_register(s:language.name, s:start_pattern)
+  if s:enabled(s:language.name)
     execute 'syntax include @' . s:language.name . ' syntax/' . s:language.name . '.vim'
     unlet! b:current_syntax
+
     execute 'syntax region svelte_' . s:language.name
           \ 'keepend'
-          \ 'start=/' . s:start_pattern . '/'
+          \ 'start=/' . s:start . '/'
           \ 'end="</' . s:language.tag . '>"me=s-1'
           \ 'contains=@' . s:language.name . ',svelteSurroundingTag'
           \ 'fold'
   endif
 endfor
 
-syn region svelteSurroundingTag contained start=+<\(script\|style\|template\)+ end=+>+ fold contains=htmlTagN,htmlString,htmlArg,htmlValue,htmlTagError,htmlEvent
-syn keyword htmlSpecialTagName contained template
-syn keyword htmlArg contained scoped ts
-syn match htmlArg "[@v:][-:.0-9_a-z]*\>" contained
-
-syntax sync fromstart
-" -----------------------------------------------------------------------------
-" Everything above forked from vim-vue:
-" https://github.com/posva/vim-vue/blob/c424294e769b26659176065f9713c395731f7b3a/syntax/vue.vim#L20-L74
-" -----------------------------------------------------------------------------
-
+" Cybernetically enhanced web apps.
 let b:current_syntax = "svelte"
+
+" Sync from start because of the wacky nesting.
+syntax sync fromstart
