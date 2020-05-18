@@ -70,9 +70,9 @@ additional installed for that to work. Supported languages include:
 
 Since Svelte doesn't support these out of the box (see
 [svelte-preprocess][preprocess] for how to set up some common language
+preprocessors with e.g. Rollup), they're all disabled by default so the first
+thing you'll need to do is enable your languages via the
 `g:svelte_preprocessors` variable:
-default so the first thing you'll need to do is enable your languages via the
-preprocessors with e.g. Rollup), they're all disabled by
 
 ```vim
 let g:svelte_preprocessors = ['typescript']
