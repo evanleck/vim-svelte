@@ -89,8 +89,63 @@ Then, use your language in your Svelte components like this:
 </style>
 ```
 
-Note, that enabling and loading a lot of different syntax definitions
-can considerably degrade Vim's performance. Consider yourself warned.
+### Customizing the list of preprocessed languages
+
+In addition to enabling the built-in preprocessors, you can customize the list
+of preprocessors that this plugin detects using the `g:svelte_preprocessor_tags`
+variable. It should be a list of dictionaries with at least a `name` and a `tag`
+attribute. You can optionally include an `as` attribute which maps to the syntax
+you'd like to use within the tag.
+
+Here's an example:
+
+```vim
+let g:svelte_preprocessor_tags = [
+  \ { 'name': 'postcss', 'tag': 'style', 'as': 'scss' }
+  \ ]
+" You still need to enable these preprocessors as well.
+let g:svelte_preprocessors = ['postcss']
+```
+
+This would highlight `<style type="postcss">` contents as `scss`, useful if you
+use something like [postcss-nested][nested].
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Usage</th>
+      <th>Required</th>
+      <th>Default value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`name`</td>
+      <td>
+        The value within the attribute `lang` or `type` on the `tag` as well as
+        the value to include in `g:svelte_preprocessors`.
+      </td>
+      <td>Yes</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>`tag`</td>
+      <td>The HTML tag to target e.g. `script` or `style`.</td>
+      <td>Yes</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>`as`</td>
+      <td>The syntax name to use for highlighting.</td>
+      <td>No</td>
+      <td>The `name` attribute.</td>
+    </tr>
+  </tbody>
+</table>
+
+Note, that enabling and loading a lot of different syntax definitions can
+considerably degrade Vim's performance. Consider yourself warned.
 
 
 ## Integrations
@@ -120,6 +175,7 @@ current working directory and run the test suite.
 [matchit]: https://github.com/adelarsq/vim-matchit
 [minpac]: https://github.com/k-takata/minpac
 [neobundle]: https://github.com/Shougo/neobundle.vim
+[nested]: https://github.com/postcss/postcss-nested
 [pathogen]: https://github.com/tpope/vim-pathogen
 [preprocess]: https://github.com/sveltejs/svelte-preprocess
 [svelte]: https://svelte.dev
