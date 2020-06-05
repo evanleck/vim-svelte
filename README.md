@@ -131,25 +131,26 @@ let g:svelte_preprocessors = ['ts']
   </thead>
   <tbody>
     <tr>
-      <td>`name`</td>
+      <td><code>name</code></td>
       <td>
-        The value within the attribute `lang` or `type` on the `tag` as well as
-        the value to include in `g:svelte_preprocessors`.
+        The value within the attribute <code>lang</code> or <code>type</code> on
+        the <code>tag</code> as well as the value to include in
+        <code>g:svelte_preprocessors</code>.
       </td>
       <td>Yes</td>
       <td>None</td>
     </tr>
     <tr>
-      <td>`tag`</td>
-      <td>The HTML tag to target e.g. `script` or `style`.</td>
+      <td><code>tag</code></td>
+      <td>The HTML tag to target e.g. <code>script</code> or <code>style</code>.</td>
       <td>Yes</td>
       <td>None</td>
     </tr>
     <tr>
-      <td>`as`</td>
+      <td><code>as</code></td>
       <td>The syntax name to use for highlighting.</td>
       <td>No</td>
-      <td>The `name` attribute.</td>
+      <td>The <code>name</code> attribute.</td>
     </tr>
   </tbody>
 </table>
