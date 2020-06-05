@@ -91,11 +91,11 @@ Then, use your language in your Svelte components like this:
 
 ### Customizing the list of preprocessed languages
 
-In addition to enabling the built-in preprocessors, you can customize the list
-of preprocessors that this plugin detects using the `g:svelte_preprocessor_tags`
-variable. It should be a list of dictionaries with at least a `name` and a `tag`
-attribute. You can optionally include an `as` attribute which maps to the syntax
-you'd like to use within the tag.
+In addition to enabling the built-in preprocessors, you can add your own
+preprocessors that this plugin will detect using the
+`g:svelte_preprocessor_tags` variable. It should be a list of dictionaries with
+at least a `name` and a `tag` attribute. You can optionally include an `as`
+attribute which maps to the syntax you'd like to use within the tag.
 
 Here's an example:
 
@@ -109,6 +109,16 @@ let g:svelte_preprocessors = ['postcss']
 
 This would highlight `<style type="postcss">` contents as `scss`, useful if you
 use something like [postcss-nested][nested].
+
+You can also create shorthand names if, for example, writing out
+`lang='typescript'` takes too long:
+
+```vim
+let g:svelte_preprocessor_tags = [
+  \ { 'name': 'ts', 'tag': 'script', 'as': 'typescript' }
+  \ ]
+let g:svelte_preprocessors = ['ts']
+```
 
 <table>
   <thead>
