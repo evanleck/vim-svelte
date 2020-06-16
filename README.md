@@ -41,7 +41,11 @@ Plug 'evanleck/vim-svelte'
 ```
 
 vim-svelte works just fine with Vim 8's native package loading as well, that's
-what I use.
+what I use:
+
+```sh
+git clone https://github.com/evanleck/vim-svelte.git ~/.vim/pack/plugins/start/vim-svelte
+```
 
 
 ## Options
