@@ -37,7 +37,7 @@ call minpac#add('evanleck/vim-svelte')
 Or using Plug:
 
 ```vimscript
-Plug 'evanleck/vim-svelte'
+Plug 'evanleck/vim-svelte', {'branch': 'main'}
 ```
 
 vim-svelte works just fine with Vim 8's native package loading as well, that's
