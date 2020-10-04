@@ -102,7 +102,7 @@ for s:language in s:languages
   let s:attr = '\(lang\|type\)=\("\|''\)[^\2]*' . s:language.name . '[^\2]*\2'
   let s:start = '<' . s:language.tag . '\>\_[^>]*' . s:attr . '\_[^>]*>'
 
-  if s:enabled(s:language.name)
+  if s:enabled(get(s:language.name, 'as', s:language.name))
     execute 'syntax include @' . s:language.name . ' syntax/' . get(s:language, 'as', s:language.name) . '.vim'
     unlet! b:current_syntax
 
