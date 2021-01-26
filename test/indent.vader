@@ -144,6 +144,28 @@ Expect svelte (indented script tag):
   </script>
 
 
+Given svelte (uneven script tag):
+  <script>
+    let name;
+      let text
+      let yes;
+
+      $: document.title = name;
+  </script>
+
+Do (indent the tag):
+  vit=
+
+Expect svelte (indented script tag):
+  <script>
+    let name;
+    let text
+    let yes;
+
+    $: document.title = name;
+  </script>
+
+
 Execute (turn off script indenting):
   let g:svelte_indent_script = 0
 
