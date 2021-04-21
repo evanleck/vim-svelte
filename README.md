@@ -167,6 +167,10 @@ considerably degrade Vim's performance. Consider yourself warned.
   other linters/fixers. PRs welcome if the one you want is missing.
 - [matchit.vim][matchit]: vim-svelte should work out of the box and allow moving
   between HTML tags as well as flow control like `#if/:else//if`.
+- [Syntastic][syntastic]: vim-syntastic will work with javascript and html checkers, for example:
+  ```vim
+  let g:syntastic_svelte_checkers = ['javascript/eslint', 'html/htmlhint']
+  ```
 
 
 ## Tests
@@ -192,6 +196,7 @@ current working directory and run the test suite.
 [pathogen]: https://github.com/tpope/vim-pathogen
 [preprocess]: https://github.com/sveltejs/svelte-preprocess
 [svelte]: https://svelte.dev
+[syntastic]: https://github.com/vim-syntastic/syntastic
 [vader]: https://github.com/junegunn/vader.vim
 [vim-javascript]: https://github.com/pangloss/vim-javascript
 [vim-plug]: https://github.com/junegunn/vim-plug
