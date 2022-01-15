@@ -133,6 +133,10 @@ Expect svelte (indented style tag):
 Given svelte (outdented script tag):
   <script>
   import { foo } from "./stores.js"
+
+    function bar() {
+        console.log('bar');
+      }
   </script>
 
 Do (indent the block):
@@ -141,6 +145,10 @@ Do (indent the block):
 Expect svelte (indented script tag):
   <script>
     import { foo } from "./stores.js"
+
+    function bar() {
+      console.log('bar');
+    }
   </script>
 
 
