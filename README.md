@@ -1,5 +1,7 @@
 # vim-svelte
 
+[![vim-svelte](https://github.com/evanleck/vim-svelte/actions/workflows/main.yml/badge.svg)](https://github.com/evanleck/vim-svelte/actions/workflows/main.yml)
+
 Vim syntax highlighting and indentation for [Svelte 3][svelte] components.
 
 This is mostly just HTML syntax highlighting with some keywords added and all
