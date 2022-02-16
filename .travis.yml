@@ -1,7 +1,0 @@
-language: vim
-
-before_script: |
-  git clone https://github.com/junegunn/vader.vim.git
-
-script: |
-  vim -N -u test/vimrc -c 'Vader! test/*.vader' > /dev/null

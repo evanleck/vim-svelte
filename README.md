@@ -1,7 +1,5 @@
 # vim-svelte
 
-[![Build Status](https://travis-ci.com/evanleck/vim-svelte.svg?branch=main)](https://travis-ci.com/evanleck/vim-svelte)
-
 Vim syntax highlighting and indentation for [Svelte 3][svelte] components.
 
 This is mostly just HTML syntax highlighting with some keywords added and all
