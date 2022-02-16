@@ -2,8 +2,8 @@ Given svelte (an open tag right after a close tag):
   {#if something}
     {/if}
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (matching indentation of the opening and closing tags):
   {#if something}
@@ -15,8 +15,8 @@ Given svelte (a svelte: tag):
     <title>Foo</title>
     </svelte:head>
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (an indented svelte: tag):
   <svelte:head>
@@ -30,8 +30,8 @@ Given svelte (a sequence of self-closing tags):
       <Foo bar={bar}/>
     <Foo bar="{bar}"/>
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (an indented sequence of self-closing tags):
   <Foo/>
@@ -51,8 +51,8 @@ Given svelte (a mix of self-closing and normal custom tags):
   <Bar></Bar>
   </Foo>
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (an indented mix of self-closing and normal custom tags):
   <Foo>
@@ -78,8 +78,8 @@ Given svelte (a combination of normal and capitalize tags):
       </div>
     </Foo>
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (indented block):
   <Foo>
@@ -101,8 +101,8 @@ Given svelte (namespaced tags):
       </div>
     </Widget.Foo>
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (indented block):
   <Widget.Foo>
@@ -119,8 +119,8 @@ Given svelte (outdented style tag):
     }
   </style>
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (indented style tag):
   <style>
@@ -130,7 +130,7 @@ Expect svelte (indented style tag):
   </style>
 
 
-Given svelte (outdented script tag):
+Given svelte (uneven script tag #1):
   <script>
   import { foo } from "./stores.js"
 
@@ -139,8 +139,8 @@ Given svelte (outdented script tag):
       }
   </script>
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (indented script tag):
   <script>
@@ -152,7 +152,7 @@ Expect svelte (indented script tag):
   </script>
 
 
-Given svelte (uneven script tag):
+Given svelte (uneven script tag #2):
   <script>
     let name;
       let text
@@ -161,8 +161,8 @@ Given svelte (uneven script tag):
       $: document.title = name;
   </script>
 
-Do (indent the tag):
-  vit=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (indented script tag):
   <script>
@@ -177,13 +177,13 @@ Expect svelte (indented script tag):
 Execute (turn off script indenting):
   let g:svelte_indent_script = 0
 
-Given svelte (an outdented script tag):
+Given svelte (an indented script tag):
   <script>
-  import { foo } from "./stores.js"
+    import { foo } from "./stores.js"
   </script>
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (an outdented script tag):
   <script>
@@ -197,15 +197,15 @@ Execute (reset script indenting):
 Execute (turn off style indenting):
   let g:svelte_indent_style = 0
 
-Given svelte (an outdented style tag):
+Given svelte (an indented style tag):
   <style>
-  .foo {
-    bar: 1;
-  }
+    .foo {
+      bar: 1;
+    }
   </style>
 
-Do (indent the block):
-  vip=
+Do (indent the whole buffer):
+  gg=G
 
 Expect svelte (an outdented style tag):
   <style>
