@@ -3,6 +3,7 @@ set nocompatible
 filetype off
 
 set runtimepath+=vader.vim
+set runtimepath+=vim-javascript
 set runtimepath+=.
 
 set expandtab
