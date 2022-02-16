@@ -1,0 +1,36 @@
+name: vim-svelte
+on: [push, pull_request]
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        neovim: [true, false]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up vim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          version: stable
+          neovim: ${{ matrix.neovim }}
+
+      - name: Checkout vim-svelte
+        uses: actions/checkout@v2
+
+      - name: Checkout vader
+        uses: actions/checkout@v2
+        with:
+          repository: junegunn/vader.vim
+          path: vader.vim
+
+      - name: Checkout vim-javascript
+        uses: actions/checkout@v2
+        with:
+          repository: pangloss/vim-javascript
+          path: vim-javascript
+
+      - name: Test
+        run: vim --nofork --clean -u test/vimrc -c 'Vader! test/*.vader'
