@@ -30,9 +30,9 @@ else
 endif
 
 runtime! indent/html.vim
+let s:html_indent = &l:indentexpr
 unlet! b:did_indent
 
-let s:html_indent = &l:indentexpr
 let b:did_indent = 1
 
 setlocal indentexpr=GetSvelteIndent()
