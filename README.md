@@ -18,10 +18,11 @@ Highlighting includes:
 
 ## Dependencies
 
-The JavaScript highlighting depends on
-[pangloss/vim-javascript][vim-javascript]. That ships with
-[sheerun/vim-polyglot][vim-polyglot] so if you're already using that then you
-should be set.
+1. [pangloss/vim-javascript][vim-javascript] for JavaScript syntax highlighting.
+2. [othree/html5.vim][html5-vim] for HTML indent.
+
+Both of those dependencies are included in [sheerun/vim-polyglot][vim-polyglot]
+so if you're already using that then you should be set.
 
 
 ## Installation
@@ -33,17 +34,20 @@ The simplest way to install vim-svelte is via a package manager like
 For example, using minpac:
 
 ```vimscript
+call minpac#add('othree/html5.vim')
+call minpac#add('pangloss/vim-javascript')
 call minpac#add('evanleck/vim-svelte')
 ```
 
 Or using Plug:
 
 ```vimscript
+Plug 'othree/html5.vim'
+Plug 'pangloss/vim-javascript'
 Plug 'evanleck/vim-svelte', {'branch': 'main'}
 ```
 
-vim-svelte works just fine with Vim 8's native package loading as well, that's
-what I use.
+vim-svelte works just fine with Vim 8's native package loading as well.
 
 
 ## Options
@@ -188,6 +192,7 @@ current working directory and run the test suite.
 
 [ale]: https://github.com/dense-analysis/ale
 [burner]: https://github.com/burner/vim-svelte
+[html5-vim]: https://github.com/othree/html5.vim
 [leafOfTree]: https://github.com/leafOfTree/vim-svelte-plugin
 [matchit]: https://github.com/adelarsq/vim-matchit
 [minpac]: https://github.com/k-takata/minpac

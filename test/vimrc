@@ -2,9 +2,10 @@ set nocompatible
 
 filetype off
 
-set runtimepath+=vader.vim
-set runtimepath+=vim-javascript
-set runtimepath+=.
+set runtimepath^=html5.vim
+set runtimepath^=vader.vim
+set runtimepath^=vim-javascript
+set runtimepath^=.
 
 set expandtab
 set shiftwidth=2
