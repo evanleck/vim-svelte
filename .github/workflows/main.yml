@@ -20,6 +20,12 @@ jobs:
       - name: Checkout vim-svelte
         uses: actions/checkout@v2
 
+      - name: Checkout html5
+        uses: actions/checkout@v2
+        with:
+          repository: othree/html5.vim
+          path: html5.vim
+
       - name: Checkout vader
         uses: actions/checkout@v2
         with:
